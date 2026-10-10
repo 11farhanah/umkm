@@ -38,13 +38,25 @@ outside the public document root.
 ### InfinityFree
 
 InfinityFree uses a fixed `htdocs` document root. Upload the repository's
-root files and directories, including `config`, `includes`, `security.php`, and
-the `public` directory, beside (not inside) `htdocs`. Copy the contents of the
-repository's `public` directory into `htdocs`; keep the repository's `public`
-directory beside it as well. Create `config/local.php` from
-`config/local.php.example` and enter the database values from the hosting
-control panel. The site URL is detected from the request; set `APP_URL`
-explicitly if the host requires it.
+`.htaccess`, `index.php`, `config`, `includes`, `security.php`, and `public`
+directory into `htdocs`, so the layout is:
+
+```text
+htdocs/
+  config/
+  includes/
+  public/
+  security.php
+  index.php
+  .htaccess
+```
+
+Do not upload the `database` directory; its SQL files are for phpMyAdmin import
+only. The root `index.php` sends visitors to `public/`, while `.htaccess`
+blocks direct requests to configuration and support files. Create
+`config/local.php` from `config/local.php.example` and enter the database
+values from the hosting control panel. The site URL is detected from the
+request; set `APP_URL` explicitly if the host requires it.
 
 ## Local development with XAMPP
 

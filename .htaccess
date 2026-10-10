@@ -1,0 +1,8 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(config|includes|database)(/|$) - [F,L,NC]
+    RewriteRule ^security\.php$ - [F,L,NC]
+    RewriteRule (^|/)\. - [F,L]
+</IfModule>
