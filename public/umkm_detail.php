@@ -3,6 +3,7 @@ session_start();
 require_once '../config/paths.php';
 require_once APP_CONFIG . '/config.php';
 require_once APP_INCLUDES . '/auth.php';
+require_once APP_INCLUDES . '/images.php';
 require_once APP_ROOT . '/security.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -89,9 +90,10 @@ $stmt->close();
 
 $title = $umkm['name'] . " - Toang Panguragan";
 generateCSRFToken();
-$img_src = !empty($umkm['image_path'])
-    ? (preg_match('/^https?:\/\//i', $umkm['image_path']) ? $umkm['image_path'] : APP_URL . '/' . ltrim($umkm['image_path'], '/'))
-    : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=80';
+$img_src = resolveImageUrl(
+    $umkm['image_path'] ?? '',
+    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=80'
+);
 
 $menuMap = [
     1 => [

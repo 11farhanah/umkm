@@ -3,6 +3,7 @@ session_start();
 require_once '../config/paths.php';
 require_once APP_CONFIG . '/config.php';
 require_once APP_INCLUDES . '/auth.php';
+require_once APP_INCLUDES . '/images.php';
 require_once APP_ROOT . '/security.php';
 
 // Generate CSRF token
@@ -16,10 +17,7 @@ $umkms = [];
 $stmt = $conn->query("SELECT * FROM umkm WHERE status = 'active'");
 if ($stmt) {
     while($row = $stmt->fetch_assoc()) {
-        $imagePath = $row['image_path'] ?? '';
-        $mappedImage = !empty($imagePath)
-            ? (preg_match('/^https?:\/\//i', $imagePath) ? $imagePath : APP_URL . '/' . ltrim($imagePath, '/'))
-            : APP_URL . '/img/placeholder.jpg';
+        $mappedImage = resolveImageUrl($row['image_path'] ?? '', APP_URL . '/img/eskelapa.jpg');
 
         $umkms[] = [
             'id' => $row['id'],

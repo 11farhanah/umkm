@@ -3,6 +3,7 @@ session_start();
 require_once '../config/paths.php';
 require_once APP_CONFIG . '/config.php';
 require_once APP_INCLUDES . '/auth.php';
+require_once APP_INCLUDES . '/images.php';
 require_once APP_ROOT . '/security.php';
 
 // Remove requireLogin to make page public
@@ -220,20 +221,10 @@ $page = 'index';
                                 while ($row = $stmt->fetch_assoc()) {
                                     $image_path = $row['image_path'] ?? '';
                                     $localImage = $localImages[(int) $row['id']] ?? '';
-                                    $storedImage = parse_url($image_path);
-                                    $appUrl = parse_url(APP_URL);
-                                    $isAppImage = is_array($storedImage)
-                                        && ($storedImage['host'] ?? '') === ($appUrl['host'] ?? '')
-                                        && ($storedImage['port'] ?? null) === ($appUrl['port'] ?? null);
-                                    $missingImage = empty($image_path)
-                                        || ($isAppImage && !is_file(APP_PUBLIC . '/' . ltrim($storedImage['path'] ?? '', '/')))
-                                        || (!preg_match('/^https?:\/\//i', $image_path) && !is_file(APP_PUBLIC . '/' . ltrim($image_path, '/')));
-                                    if ($missingImage) {
-                                        $image_path = $localImage;
-                                    }
-                                    $img_src = !empty($image_path)
-                                        ? (preg_match('/^https?:\/\//i', $image_path) ? $image_path : APP_URL . '/' . ltrim($image_path, '/'))
+                                    $fallbackImage = !empty($localImage)
+                                        ? APP_URL . '/' . $localImage
                                         : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80';
+                                    $img_src = resolveImageUrl($image_path, $fallbackImage);
 
                                     $name = strtolower(trim($row['name'] ?? ''));
                                     $description = strtolower(trim($row['description'] ?? ''));

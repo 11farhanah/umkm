@@ -1,0 +1,8 @@
+<?php
+
+return [
+    'DB_HOST' => 'localhost',
+    'DB_NAME' => 'your_database_name',
+    'DB_USER' => 'your_database_username',
+    'DB_PASS' => 'replace_with_a_strong_password',
+];
